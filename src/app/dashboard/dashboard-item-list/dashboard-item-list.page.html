@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>dashboard-item-list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <app-item-list [routesItemList]="currentRouteList | async" [poiItemList]="currentPoiList | async" ></app-item-list>
+  </ion-grid>
+</ion-content>
+
+

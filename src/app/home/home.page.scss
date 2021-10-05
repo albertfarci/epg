@@ -25,3 +25,16 @@
 #container a {
   text-decoration: none;
 }
+
+.ios,
+.md {
+  home-page {
+    .scroll-content {
+      height: 100%;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

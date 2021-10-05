@@ -1,0 +1,8 @@
+<div *ngIf="this.itemList">
+
+  <div *ngFor="let routeLeg of this.itemList">
+
+    <app-item-leg [routesItemLeg]="routeLeg"></app-item-leg>
+  </div>
+
+</div>

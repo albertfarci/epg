@@ -6,12 +6,17 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ConnectivityService } from './connectivity-service.service';
+import { Network } from '@ionic-native/network/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { SharedModule } from './shared/shared.module';
+import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,SharedModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ConnectivityService,Network, Geolocation, DocumentViewer],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

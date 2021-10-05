@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>dashboard-item-detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row *ngIf="currentPoiItem | async as poi">
+
+      <ion-col size="12">
+        <ion-card-header>
+          <ion-item lines="none">
+            <ion-card-title class="ion-text-wrap title xx-large">
+
+              <span>
+                {{poi.title}}
+              </span>
+            </ion-card-title>
+          </ion-item>
+        </ion-card-header>
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-slides pager="true" [options]="slideOpts" style="position: inherit; height: 350px;">
+          <ion-slide *ngFor="let foto of poi?.gallery">
+            <img class="img-chiesa" src="{{foto}}" style="height: 100%;"/>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+
+    <ion-card-content>
+
+
+      <ion-row>
+
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-icon class="title" slot="start" name="pin-outline"></ion-icon>
+            <span class="ion-text-wrap text larger">
+              {{poi.address}}
+            </span>
+          </ion-item>
+        </ion-col>
+          
+          <ion-col size="12">
+            <ion-row >
+              <ion-col size="10">
+                <ion-item lines="none">
+                  <span class="ion-text-wrap title x-large">
+                    {{ 'biglietti entrata'}}
+                  </span>
+                </ion-item>
+              </ion-col>
+              <ion-col size="2">
+                <ion-button (click)="openPdf()">
+                  <ion-icon name="ticket-outline"></ion-icon>
+              </ion-button>
+              </ion-col>
+              
+            </ion-row>
+          </ion-col>
+          
+
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-icon class="title" slot="start" name="text-outline"></ion-icon>
+            <span class="ion-text-wrap title larger">
+              {{ 'narrazione'}}
+            </span>
+          </ion-item>
+
+
+          <ion-item>
+            <span class="ion-text-wrap text large" [innerHTML]="poi?.narrazione">
+            </span>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-icon class="title" slot="start" name="film-outline"></ion-icon>
+            <span class="ion-text-wrap title x-large">
+              {{ 'multimedia'}}
+            </span>
+          </ion-item>
+        </ion-col>
+        
+  
+        <ion-col size="12">
+          <ion-item lines="none" class="ion-margin-top" *ngIf="poi?.audio ">
+        
+  
+            <!-- player -->
+          <ion-grid class="audio-container" >
+            <ion-row class="ion-align-items-center">
+              <ion-col size="auto">
+                <ion-button
+                  aria-label="play"
+                  *ngIf="nowPlayingAudioIndex !== i "
+                  [color]="nowPlayingAudioIndex == i ? 'primary' : 'medium'"
+                  (click)="playPlauseAudio(i, poi?.audio )"
+                >
+                  <ion-icon
+                    ios="play-outline"
+                    md="play-sharp"
+                    slot="icon-only"
+                  ></ion-icon>
+                </ion-button>
+    
+                
+              </ion-col>
+    
+              <ion-col>
+                <ion-range
+                  #range
+                  min="0"
+                  [max]="nowPlayingAudioIndex == i ? audioDuration : 100"
+                  [value]="nowPlayingAudioIndex == i ? audioProgress : 0"
+                  [color]="nowPlayingAudioIndex == i ? 'primary' : 'medium'"
+                  pin="false"
+                  mode="md"
+                  debounce="0"
+                  (touchstart)="pauseWhileSeeking(i)"
+                  (mousedown)="pauseWhileSeeking(i)"
+                  (touchend)="seek(i,$event)"
+                  (mouseup)="seek(i, $event)"
+                ></ion-range>
+              </ion-col>
+              <ion-col size="auto">
+                <ion-text
+                  class="timestamp"
+                  [color]="nowPlayingAudioIndex == i ? 'dark' : 'medium'"
+                  >{{nowPlayingAudioIndex == i && audioPlayer?
+                  getAudioProgress(audioPlayer.currentTime) :
+                  '00:00'}}</ion-text
+                >
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <!-- end player -->
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-item class="ion-margin-top" *ngIf="poi?.virtualTour && nowPlayingAudioIndex !== i || audioIsPaused" >
+            <iframe id="iframe" style="width: 100%; height: 70vh;"
+              [src]="iframeTemplateService.iframeSanitize(poi)" allowfullscreen="true">
+            </iframe>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+    </ion-card-content>
+  </ion-row>
+</ion-content>

@@ -1,0 +1,13 @@
+<ion-row class="ion-margin item-leg" (click)="goToDetail()">
+
+      <ion-col size-xs="7" size-sm="8" size="10" >
+        <app-item-poi [routesItemPoi]="routesItemLeg.poi"></app-item-poi>
+      </ion-col>
+    
+      <ion-col size-xs="5" size-sm="4" size="2" >
+        <app-item-duration [routesItemDuration]="routesItemLeg.leg.duration"></app-item-duration>
+        <app-item-distance [routesItemDistance]="routesItemLeg.leg.distance"></app-item-distance>
+    
+      </ion-col>
+
+</ion-row>
