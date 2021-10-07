@@ -1,9 +1,10 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ConnectivityService } from '../connectivity-service.service';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GoogleService } from '../shared/services/google.service';
 import { ICONS } from '../shared/models/marker-options.model';
+import { GeoLocationService } from '../shared/services/geoLocation.service';
+import { PoiService } from '../shared/services/poi.service';
 
 declare var google;
 
@@ -18,10 +19,15 @@ export class HomePage {
   apiKey: any;
   public markers: any[] = [];
 
+  tracker;
+  destination;
+  origin;
+
   constructor(public nav: NavController,
     public connectivityService: ConnectivityService,
-    public geolocation: Geolocation,
-    public googleService: GoogleService) {
+    public geolocation: GeoLocationService,
+    public googleService: GoogleService,
+    public poiService: PoiService) {
 
   }
 
@@ -61,42 +67,45 @@ export class HomePage {
   initMap() {
 
     this.mapInitialised = true;
-    this.geolocation.getCurrentPosition()
-      .then((position) => {
 
-        this.map = this.googleService.initMap(this.mapElement.nativeElement, position)
+    this.tracker = setInterval(()=>{
 
-        const origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      this.geolocation.getLocationCoordinatesSetup();
 
-        const destination = new google.maps.LatLng(39.616867131543394, 8.819857065354022);
+    },10000);
 
-        this.googleService.setMarker(ICONS['Ellipse25'], origin, this.map);
-        this.googleService.setMarker(ICONS['posizioneCorrente'], origin, this.map);
 
-        this.googleService.route(origin, destination);
+    this.geolocation.currentPosition
+      .subscribe(
+        position => {
 
-        this.googleService.currentRoute.subscribe(
-          data => this.googleService.setMap(data, this.map)
-        )
+          if (position) {
 
-        const request = {
-          placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-          fields: ["name", "formatted_address", "place_id", "geometry"],
-        };
-        const service = new google.maps.places.PlacesService(this.map);
+            if(!this.map){
+              this.map = this.googleService.initMap(this.mapElement.nativeElement, position)
 
-        service.getDetails(request, (place, status) => {
-          if (
-            status === google.maps.places.PlacesServiceStatus.OK &&
-            place &&
-            place.geometry &&
-            place.geometry.location
-          ) {
-            console.log(place)
+              const destinationConst = this.poiService.getDestinationPosition();
+
+              this.destination=new google.maps.LatLng(destinationConst.latitude, destinationConst.longitude);
+            }
+            
+            this.origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            this.googleService.setMarker(ICONS['Ellipse25'], this.origin, this.map);
+            this.googleService.setMarker(ICONS['posizioneCorrente'], this.origin, this.map);
+
+            this.googleService.route(this.origin, this.destination);
+
+            this.googleService.currentRoute.subscribe(
+              data => this.googleService.setMap(data, this.map)
+            )
+
           }
-        });
+        }
+      )
 
-      });
+    this.geolocation.getLocationCoordinatesSetup();
+
   }
 
   disableMap() {
