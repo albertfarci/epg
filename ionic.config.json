@@ -1,5 +1,7 @@
 {
   "name": "epg",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

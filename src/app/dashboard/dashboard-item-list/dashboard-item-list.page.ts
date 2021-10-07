@@ -1,41 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleService } from 'src/app/shared/services/google.service';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { PoiService } from 'src/app/shared/services/poi.service';
+import { GeoLocationService } from 'src/app/shared/services/geoLocation.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-item-list',
   templateUrl: './dashboard-item-list.page.html',
   styleUrls: ['./dashboard-item-list.page.scss'],
 })
-export class DashboardItemListPage implements OnInit {
+export class DashboardItemListPage {
 
-  currentRouteList;  
+  currentRouteList;
   currentPoiList;
 
+  destroy$: Subject<boolean>;
+
   constructor(
-    public geolocation: Geolocation,
+    public geolocation: GeoLocationService,
     public googleService: GoogleService,
     public poiService: PoiService) {
   }
 
+  ionViewDidEnter() {
 
-  ngOnInit() {
+    this.destroy$ = new Subject<boolean>();
 
-    this.geolocation.getCurrentPosition()
-    .then((position) => {
+    this.geolocation.currentPosition
+      .subscribe(
+        position => {
 
-      const origin = this.googleService.getLatLng(position.coords)
+          if (position) {
+            console.log(position)
 
-      const destination = this.googleService.getLatLng(this.poiService.getDestinationPosition());
-     
-      this.googleService.route(origin,destination);
+            const origin = this.googleService.getLatLng(position.coords)
 
-      this.currentRouteList = this.googleService.currentRoute;
+            const destination = this.googleService.getLatLng(this.poiService.getDestinationPosition());
 
-    });
-    
-    this.currentPoiList=this.poiService.currentPOI;
+            this.googleService.route(origin, destination);
+
+            this.currentRouteList = this.googleService.currentRoute;
+
+          }
+        }
+      )
+
+    this.geolocation.getLocationCoordinatesSetup();
+
+    this.currentPoiList = this.poiService.currentPOI;
 
     this.poiService.getPois()
 

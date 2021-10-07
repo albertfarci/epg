@@ -10,11 +10,12 @@ import { ItemDistanceComponent } from "./components/item-distance/item-distance.
 import { ItemPoiComponent } from "./components/item-poi/item-poi.component";
 import { IconTextComponent } from "./components/icon-text/icon-text.component";
 import { IframeTemplateService } from "./services/iframe-template.service";
+import { GeoLocationService } from './services/geoLocation.service';
 
 @NgModule({
   declarations: [ItemListComponent, ItemDurationComponent, ItemLegComponent, ItemDistanceComponent, ItemPoiComponent, IconTextComponent],
-  imports: [CommonModule,HttpClientModule],
-  exports: [ItemListComponent, ItemDurationComponent,ItemLegComponent, ItemDistanceComponent,ItemPoiComponent, IconTextComponent],
-  providers: [GoogleService, PoiService, IframeTemplateService]
+  imports: [CommonModule, HttpClientModule],
+  exports: [ItemListComponent, ItemDurationComponent, ItemLegComponent, ItemDistanceComponent, ItemPoiComponent, IconTextComponent],
+  providers: [GoogleService, PoiService, IframeTemplateService, GeoLocationService]
 })
 export class SharedModule { }

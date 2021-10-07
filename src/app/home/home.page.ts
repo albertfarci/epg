@@ -23,6 +23,9 @@ export class HomePage {
     public geolocation: Geolocation,
     public googleService: GoogleService) {
 
+  }
+
+  ionViewDidEnter() {
     this.loadGoogleMaps();
   }
 
@@ -54,26 +57,26 @@ export class HomePage {
       }
     }
   }
-  
+
   initMap() {
 
     this.mapInitialised = true;
     this.geolocation.getCurrentPosition()
       .then((position) => {
 
-        this.map = this.googleService.initMap(this.mapElement.nativeElement,position)
+        this.map = this.googleService.initMap(this.mapElement.nativeElement, position)
 
         const origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
         const destination = new google.maps.LatLng(39.616867131543394, 8.819857065354022);
 
-        this.googleService.setMarker(ICONS['Ellipse25'],origin,this.map);
-        this.googleService.setMarker(ICONS['posizioneCorrente'],origin,this.map);
+        this.googleService.setMarker(ICONS['Ellipse25'], origin, this.map);
+        this.googleService.setMarker(ICONS['posizioneCorrente'], origin, this.map);
 
-        this.googleService.route(origin,destination);
+        this.googleService.route(origin, destination);
 
         this.googleService.currentRoute.subscribe(
-          data => this.googleService.setMap(data,this.map)
+          data => this.googleService.setMap(data, this.map)
         )
 
         const request = {
