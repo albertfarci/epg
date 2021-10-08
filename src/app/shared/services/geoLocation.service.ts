@@ -147,8 +147,8 @@ export class GeoLocationService {
 
 
     getLocationCoordinatesSetup() {
-        this.getLocationCoordinates()
-        //this.checkGPSPermission()
+        //this.getLocationCoordinates()
+        this.checkGPSPermission()
     }
 
 
